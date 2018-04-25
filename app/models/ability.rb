@@ -93,7 +93,7 @@ class Ability
   end
 
   def signed_in?(user)
-    user.persisted?
+    user.persisted? && user.confirmed?
   end
 
   def on_team?(user, team)
