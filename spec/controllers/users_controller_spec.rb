@@ -100,6 +100,11 @@ RSpec.describe UsersController, type: :controller do
               put :update, params: { id: user.to_param, user: { name: 'Trung Le', email: 'newmail@example.com' } }
             }.to change { ActionMailer::Base.deliveries.count }.by(1)
           end
+
+          it "allows updating the requested user" do
+            expect_any_instance_of(User).to receive(:update_attributes).with(ActionController::Parameters.new({ name: 'Trung Le' }).permit(:name))
+            put :update, params: { id: user.to_param, user: { name: 'Trung Le' } }
+          end
         end
 
         it "updates the requested user" do
