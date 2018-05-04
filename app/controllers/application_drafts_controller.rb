@@ -134,11 +134,11 @@ class ApplicationDraftsController < ApplicationController
   end
 
   def open_draft
-    current_student.current_draft if signed_in?
+    current_student.current_draft if signed_in_and_confirmed?
   end
 
   def sign_in_required
-    render 'sign_in' unless signed_in?
+    render 'sign_in' unless signed_in_and_confirmed?
   end
 
   def valid_user_profile_required

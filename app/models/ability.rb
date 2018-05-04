@@ -23,7 +23,7 @@ class Ability
     end
 
     can :crud, Team do |team|
-      user.admin? || signed_in?(user) && team.new_record? || on_team?(user, team)
+      user.admin? || signed_in_and_confirmed?(user) && team.new_record? || on_team?(user, team)
     end
 
     can :update_conference_preferences, Team do |team|
@@ -43,7 +43,7 @@ class Ability
     end
 
     can :join, Team do |team|
-      team.helpdesk_team? and signed_in?(user) and user.confirmed? and not on_team?(user, team)
+      team.helpdesk_team? and signed_in_and_confirmed?(user) and user.confirmed? and not on_team?(user, team)
     end
 
     can :crud, Role do |role|
@@ -86,13 +86,13 @@ class Ability
 
     # activities
     can :read, :feed_entry
-    can :read, :mailing if signed_in?(user)
+    can :read, :mailing if signed_in_and_confirmed?(user)
 
     # applications
     can :create, :application_draft if user.student? && user.application_drafts.in_current_season.none?
   end
 
-  def signed_in?(user)
+  def signed_in_and_confirmed?(user)
     user.persisted? && user.confirmed?
   end
 

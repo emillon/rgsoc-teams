@@ -8,7 +8,7 @@ module Supervisors
     protected
 
     def must_be_supervisor
-      unless signed_in? && current_user.roles.includes?('supervisor')
+      unless signed_in_and_confirmed? && current_user.roles.includes?('supervisor')
         redirect_to root_path, alert: 'Sorry, the dashboard is for supervisors only'
       end
     end
