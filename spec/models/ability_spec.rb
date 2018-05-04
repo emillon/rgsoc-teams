@@ -172,7 +172,7 @@ RSpec.describe Ability, type: :model do
       end
 
       describe "just orga members, team's supervisor and team's students should be able to see offered conference for a team" do
-        let(:user) { build(:student)}
+        let(:user) { create(:student, confirmed_at: Time.now)}
 
         context 'when the user is an student of another team' do
           it { expect(ability).not_to be_able_to(:see_offered_conferences, Team.new) }
@@ -383,7 +383,7 @@ RSpec.describe Ability, type: :model do
       end
 
       context 'when using a project as a template' do
-        let(:user) { build :user }
+        let(:user) { create :user }
 
         context 'for the original project submitter' do
           let(:project) { build :project, submitter: user }
