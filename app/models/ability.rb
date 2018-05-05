@@ -23,19 +23,19 @@ class Ability
     end
 
     can :crud, Team do |team|
-      user.admin? || signed_in_and_confirmed?(user) && team.new_record? || on_team?(user, team)
+      user.admin? || signed_in?(user) && user.confirmed? && team.new_record? || on_team?(user, team)
     end
 
     can :update_conference_preferences, Team do |team|
-      team.accepted? && team.students.include?(user) && signed_in_and_confirmed?(user)
+      team.accepted? && team.students.include?(user) && signed_in?(user) && user.confirmed?
     end
 
     can :see_offered_conferences, Team do |team|
-      (user.admin? || team.students.include?(user) || team.supervisors.include?(user)) && signed_in_and_confirmed?(user)
+      (user.admin? || team.students.include?(user) || team.supervisors.include?(user)) && signed_in?(user) && user.confirmed?
     end
 
     can :accept_or_reject_conference_offer, Team do |team|
-      team.students.include?(user) && signed_in_and_confirmed?(user)
+      team.students.include?(user) && signed_in?(user) && user.confirmed?
     end
 
     cannot :create, Team do |team|
@@ -43,42 +43,42 @@ class Ability
     end
 
     can :join, Team do |team|
-      team.helpdesk_team? and signed_in_and_confirmed?(user) and user.confirmed? and not on_team?(user, team)
+      team.helpdesk_team? and signed_in?(user) && user.confirmed? and user.confirmed? and not on_team?(user, team)
     end
 
     can :crud, Role do |role|
-      (user.admin? || on_team?(user, role.team)) && signed_in_and_confirmed?(user)
+      (user.admin? || on_team?(user, role.team)) && signed_in?(user) && user.confirmed?
     end
 
     can :crud, Source do |repo|
-      (user.admin? || on_team?(user, role.team)) && signed_in_and_confirmed?(user)
+      (user.admin? || on_team?(user, role.team)) && signed_in?(user) && user.confirmed?
     end
 
     can :supervise, Team do |team|
-      (user.roles.organizer.any? || team.supervisors.include?(user)) && signed_in_and_confirmed?(user)
+      (user.roles.organizer.any? || team.supervisors.include?(user)) && signed_in?(user) && user.confirmed?
     end
 
     can :crud, ConferencePreference do |preference|
-      (user.admin? || (preference.team.students.include? user)) && signed_in_and_confirmed?(user)
+      (user.admin? || (preference.team.students.include? user)) && signed_in?(user) && user.confirmed?
     end
 
-    can :crud, Conference if (user.admin? || user.current_student?) && signed_in_and_confirmed?(user)
+    can :crud, Conference if (user.admin? || user.current_student?) && signed_in?(user) && user.confirmed?
 
     # todo add mailing controller and view for users in their namespace, where applicable
     can :read, Mailing do |mailing|
       mailing.recipient? user
     end
 
-    can :crud, :comments if (user.admin?) && signed_in_and_confirmed?(user)
-    can :read, :users_info if (user.admin? || user.supervisor?) && signed_in_and_confirmed?(user)
+    can :crud, :comments if (user.admin?) && signed_in?(user) && user.confirmed?
+    can :read, :users_info if (user.admin? || user.supervisor?) && signed_in?(user) && user.confirmed?
 
     # projects
     can :crud, Project do |project|
       (user.admin? ||
-        (user.confirmed? && user == project.submitter)) && signed_in_and_confirmed?(user)
+       (user.confirmed? && user == project.submitter)) && signed_in?(user) && user.confirmed?
     end
     can :use_as_template, Project do |project|
-      (user == project.submitter && !project.season&.current?) && signed_in_and_confirmed?(user)
+      (user == project.submitter && !project.season&.current?) && signed_in?(user) && user.confirmed?
     end
 
     can :create, Project if user.confirmed?
@@ -86,14 +86,14 @@ class Ability
 
     # activities
     can :read, :feed_entry
-    can :read, :mailing if signed_in_and_confirmed?(user)
+    can :read, :mailing if signed_in?(user) && user.confirmed?
 
     # applications
-    can :create, :application_draft if user.student? && user.application_drafts.in_current_season.none? && signed_in_and_confirmed?(user)
+    can :create, :application_draft if user.student? && user.application_drafts.in_current_season.none? && signed_in?(user) && user.confirmed?
   end
 
-  def signed_in_and_confirmed?(user)
-    user.persisted? && user.confirmed?
+  def signed_in?(user)
+    user.persisted?
   end
 
   def on_team?(user, team)
