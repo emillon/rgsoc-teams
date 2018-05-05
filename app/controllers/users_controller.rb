@@ -38,9 +38,8 @@ class UsersController < ApplicationController
         # manually here
         if !@user.confirmed? && !@user.previous_changes["unconfirmed_email"].present?
           @user.send_confirmation_instructions
-        else
-          notice = 'User was successfully updated.'
         end
+        notice = 'User was successfully updated.'
         format.html { redirect_to params[:redirect_to].presence || @user, notice: notice }
         format.json { head :no_content }
       else

@@ -87,7 +87,9 @@ RSpec.describe UsersController, type: :controller do
       describe "with valid params" do
 
         context "and unconfirmed user" do
-          let(:user) { create(:user, confirmed_at: nil) }
+          let(:user) { create(:user, confirmed_at: nil, name: 'before') }
+          let(:params) { { id: user.id, user: { name: 'after' } } }
+          subject(:request) { put :update, params: params }
 
           it "sends an confirmation email if the user isn't confirmed yet and the email wasn't changed" do
             expect {
@@ -101,9 +103,11 @@ RSpec.describe UsersController, type: :controller do
             }.to change { ActionMailer::Base.deliveries.count }.by(1)
           end
 
-          it "allows updating the requested user" do
-            expect_any_instance_of(User).to receive(:update_attributes).with(ActionController::Parameters.new({ name: 'Trung Le' }).permit(:name))
-            put :update, params: { id: user.to_param, user: { name: 'Trung Le' } }
+          it 'updates the user record' do
+            expect { request }.to change {user.reload.name}.from('before').to('after')
+            request
+            expect(response).to redirect_to user
+            expect(flash[:notice]).to eq('User was successfully updated.')
           end
         end
 
