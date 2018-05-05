@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   impersonates :user
 
   def signed_in_and_confirmed?
-    signed_in? && current_user.try(:confirmed?)
+    current_user&.confirmed?
   end
 
   def after_sign_in_path_for(user)
