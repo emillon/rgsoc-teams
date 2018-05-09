@@ -407,10 +407,6 @@ RSpec.describe Ability, type: :model do
     let(:user) { create(:helpdesk) }
     let(:team) { create(:team) }
 
-    it 'should be logged in' do
-      expect(ability.signed_in?(user)).to eql true
-    end
-
     it 'should not be part of existing team' do
       expect(ability.on_team?(user, team)).to eql false
     end
