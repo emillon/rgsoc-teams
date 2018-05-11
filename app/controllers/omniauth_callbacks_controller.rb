@@ -3,7 +3,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def github
     user = User.find_or_create_for_github_oauth(request.env['omniauth.auth'])
 
-    if user.just_created? || !user.valid? || user.github_import
+    if user.just_created? || !user.valid? || user.github_import || !user.confirmed?
       sign_in user
       redirect_to edit_user_path(user, welcome: true)
     elsif user.persisted?
