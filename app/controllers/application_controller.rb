@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   after_action :store_location
 
-  helper_method :current_season, :current_student, :signed_in_and_confirmed?
+  helper_method :current_season, :current_student
 
   before_action do
     redirect_to = params[:redirect_to]
@@ -23,10 +23,6 @@ class ApplicationController < ActionController::Base
   # Allow users to impersonate other uses in a non-production environment.
   # See the `pretender` gem.
   impersonates :user
-
-  def signed_in_and_confirmed?
-    current_user&.confirmed?
-  end
 
   def after_sign_in_path_for(user)
     if user.just_created?

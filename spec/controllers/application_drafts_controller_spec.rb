@@ -24,7 +24,7 @@ RSpec.describe ApplicationDraftsController, type: :controller do
       let(:user) { create(:user, confirmed_at: nil) }
 
       before do
-        allow(controller).to receive_messages(signed_in_and_confirmed?: true)
+        allow(controller).to receive_messages(signed_in?: true)
         allow(controller).to receive_messages(current_user: user)
       end
 
@@ -49,7 +49,7 @@ RSpec.describe ApplicationDraftsController, type: :controller do
     end
 
     before do
-      allow(controller).to receive_messages(signed_in_and_confirmed?: true)
+      allow(controller).to receive_messages(signed_in?: true)
       allow(controller).to receive_messages(current_user: user)
     end
 
