@@ -3,12 +3,13 @@ module Supervisors
   class BaseController < ApplicationController
 
     before_action :must_be_supervisor
+    before_action :authenticate_user!
     helper_method :supervised_teams
 
     protected
 
     def must_be_supervisor
-      unless signed_in_and_confirmed? && current_user.roles.includes?('supervisor')
+      unless current_user&.supervisor?
         redirect_to root_path, alert: 'Sorry, the dashboard is for supervisors only'
       end
     end
