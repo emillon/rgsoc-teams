@@ -105,7 +105,6 @@ RSpec.describe UsersController, type: :controller do
 
           it 'updates the user record' do
             expect { request }.to change {user.reload.name}.from('before').to('after')
-            request
             expect(response).to redirect_to user
             expect(flash[:notice]).to eq('User was successfully updated.')
           end
