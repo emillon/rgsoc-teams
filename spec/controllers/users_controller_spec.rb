@@ -8,6 +8,7 @@ RSpec.describe UsersController, type: :controller do
   describe "GET show" do
     it "assigns the requested user as @user" do
       user = create(:user)
+      sign_in user
       get :show, params: { id: user.to_param }
       expect(assigns(:user)).to eq(user)
     end
@@ -27,6 +28,7 @@ RSpec.describe UsersController, type: :controller do
         # There are some stale conferences preferences records in the system since
         # attendences used to stick around when their conference was deleted
         it 'will not list conferences preferences w/o conference' do
+          sign_in user
           get :show, params: { id: user.to_param }
           expect(response).to be_success
           expect(response.body).not_to match conference.name

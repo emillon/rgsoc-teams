@@ -10,20 +10,12 @@ RSpec.describe ApplicationDraftsController, type: :controller do
     allow_any_instance_of(Team).to receive(:coaches_confirmed?).and_return(true)
   end
 
-  context 'as an anonymous user' do
-    describe 'GET new' do
-      it 'renders the "sign_in" template' do
-        get :new
-        expect(response).to render_template 'sign_in'
-      end
-    end
-  end
-
   context 'as a not confirmed user' do
     describe 'GET new' do
       let(:user) { create(:user, confirmed_at: nil) }
 
       before do
+        sign_in user
         allow(controller).to receive_messages(signed_in?: true)
         allow(controller).to receive_messages(current_user: user)
       end
@@ -49,6 +41,7 @@ RSpec.describe ApplicationDraftsController, type: :controller do
     end
 
     before do
+      sign_in user
       allow(controller).to receive_messages(signed_in?: true)
       allow(controller).to receive_messages(current_user: user)
     end
