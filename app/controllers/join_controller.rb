@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class JoinController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_team
   before_action :allow_helpdesk
 

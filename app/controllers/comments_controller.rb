@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class CommentsController < ApplicationController
+  before_action :authenticate_user!
 
   # This controller manages the comments on applications and projects.
   # Supervisor's comments on their teams are managed by the supervisors/comments-controller

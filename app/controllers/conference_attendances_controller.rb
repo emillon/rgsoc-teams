@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class ConferenceAttendancesController < ApplicationController
+  before_action :authenticate_user!
 
   def update
     @conference_attendance = ConferenceAttendance.find(params[:id])

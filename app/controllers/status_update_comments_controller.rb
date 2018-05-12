@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class StatusUpdateCommentsController < CommentsController
+  before_action :authenticate_user!
 
   def create
     comment = Comment.new(comment_params)
